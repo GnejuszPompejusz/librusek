@@ -39,7 +39,16 @@ const Settings = () => {
     "nord",
     "sunset",
   ];
+  const [messagePageLimit, setMessagesPageLimit] = useState(
+    localStorage.getItem('messagesPageLimit') || 5
+  );
 
+  const handleMessagesPageLimitChange = value => {
+    setMessagesPageLimit(value);
+    localStorage.setItem('messagesPageLimit', value);
+    // window.location.reload();
+  }
+  
   return (
     <Layout>
       <dialog id="cacheClear" class="modal modal-bottom sm:modal-middle">
@@ -165,6 +174,26 @@ const Settings = () => {
                 Explore
               </button>
             </div>
+            {/* Sekcja wiadomości przeniesiona tutaj */}
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-2">
+              <div>
+                <p className="text-lg font-semibold">Maximum Messages on Message Page</p>
+                <p className="text-sm">
+                  Set the maximum number of messages that can be displayed on the messages page.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                {["2", "5", "10", "15"].map((limit) => (
+                  <button
+                    key={limit}
+                    className={`btn ${limit === messagePageLimit ? "btn-primary" : ""}`}
+                    onClick={() => handleMessagesPageLimitChange(limit)}
+                  >
+                    {limit}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex flex-col">
@@ -180,7 +209,7 @@ const Settings = () => {
               <div className="flex flex-col">
                 <span className="text-lg font-semibold">Developer mode</span>
                 <span className="text-sm">
-                  Enable &quot;Developer&quot; page with advanced features for
+                  Enable "Developer" page with advanced features for
                   debugging.
                 </span>
               </div>
@@ -219,10 +248,8 @@ const Settings = () => {
             </div>
           </div>
         </div>
-
-        {/*wiadomosci */}
       </div>
     </Layout >
-  );
+);
 };
 export default Settings;
