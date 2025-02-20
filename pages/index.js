@@ -11,6 +11,7 @@ import { deduplicate } from "@/lib/utils";
 import { fetch } from "@tauri-apps/plugin-http";
 import dayjs from "dayjs";
 
+
 const Home = () => {
   // User info
   const [userData, setUserData] = useState(null);
@@ -171,22 +172,19 @@ const Home = () => {
           }).map((a) => (
             <div
               key={a.Id}
-              className={`flex flex-col sm:flex-row items-start sm:items-center justify-between bg-base-200 rounded-box gap-2 p-4 ${
-                !a.WasRead && "border border-primary"
-              }`}
+              className={`flex flex-col sm:flex-row items-start sm:items-center justify-between bg-base-200 rounded-box gap-2 p-4 ${!a.WasRead && "border border-primary"
+                }`}
             >
               <div className="flex flex-col">
                 <span className="text-lg font-bold">{a.Subject}</span>
                 <div className="flex flex-row items-center gap-x-2 gap-y-1 flex-wrap">
                   <span>
                     {!teachersLoading && teachersData
-                      ? `${
-                          teachersData.Users.find((t) => t.Id === a.AddedBy.Id)
-                            .FirstName
-                        } ${
-                          teachersData.Users.find((t) => t.Id === a.AddedBy.Id)
-                            .LastName
-                        }`
+                      ? `${teachersData.Users.find((t) => t.Id === a.AddedBy.Id)
+                        .FirstName
+                      } ${teachersData.Users.find((t) => t.Id === a.AddedBy.Id)
+                        .LastName
+                      }`
                       : "Unknown teacher"}
                   </span>
                   <span>-</span>
