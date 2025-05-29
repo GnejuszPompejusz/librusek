@@ -1,0 +1,11 @@
+{
+  "advanced": {
+    "auto_login": {
+      "title": "Ustawienia automatycznego logowania",
+      "disableButton": "Wyłącz automatyczne logowanie",
+      "disabledMessage": "Automatyczne logowanie zostało wyłączone.",
+      "currentlyActive": "Automatyczne logowanie jest aktywne.",
+      "currentlyInactive": "Automatyczne logowanie jest nieaktywne."
+    }
+  }
+}

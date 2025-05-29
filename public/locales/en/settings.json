@@ -41,6 +41,14 @@
                 "message": "The application request cache has been cleared successfully.",
                 "button": "Close"
             }
+        },
+        "auto_login": {
+          "title": "Auto-Login Settings",
+          "disable_button": "Disable Auto-Login",
+          "disabled_message": "Auto-login has been disabled.",
+          "currently_active": "Auto-login is currently active.",
+          "currently_inactive": "Auto-login is currently inactive.",
+          "error_message": "Could not disable auto-login. Please try again."
         }
     }
 }

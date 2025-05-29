@@ -8,7 +8,7 @@ import { Key, Person, Trash } from "react-bootstrap-icons";
 import { useTranslation } from "next-i18next";
 
 import { getStaticPaths, makeStaticProps } from "@/lib/i18n/getStatic";
-import { authenticate } from "@/lib/auth";
+import { authenticate, generateAutoLoginToken } from "@/lib/auth";
 
 const getStaticProps = makeStaticProps(["auth", "common"]);
 export { getStaticPaths, getStaticProps };
@@ -24,12 +24,20 @@ const Auth = () => {
 
   const onSubmit = async (data) => {
     setAuthLoading(true);
-    const { login, password, nickname } = data;
+    const { login, password, nickname, enableAutoLogin } = data;
     const authenticated = await authenticate(login, password);
     if (!authenticated || authenticated.error) {
       setError(authenticated);
       return setAuthLoading(false);
     }
+
+    if (enableAutoLogin) {
+      const autoLoginToken = generateAutoLoginToken();
+      await SecureStoragePlugin.set({ key: "autoLoginToken", value: autoLoginToken });
+    } else {
+      await SecureStoragePlugin.remove({ key: "autoLoginToken" });
+    }
+
     if (nickname) {
       const currentAccounts = savedAccounts;
       const account = {
@@ -190,6 +198,16 @@ const Auth = () => {
                   }}
                 />
                 {t("actions.save_account")}
+              </label>
+            </div>
+            <div className="fieldset">
+              <label className="fieldset-label cursor-pointer self-start gap-2">
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  {...register("enableAutoLogin")}
+                />
+                {t("actions.auto_login")}
               </label>
             </div>
           </form>

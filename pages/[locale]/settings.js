@@ -1,4 +1,5 @@
 import { Preferences } from "@capacitor/preferences";
+import { SecureStoragePlugin } from "capacitor-secure-storage-plugin";
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -15,6 +16,8 @@ const Settings = () => {
   const { t } = useTranslation(["settings", "common"]);
 
   const [devmode, setDevmode] = useState("false");
+  const [isAutoLoginActive, setIsAutoLoginActive] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
 
   const { theme, setTheme } = useTheme();
   const themes = [
@@ -65,7 +68,33 @@ const Settings = () => {
         response.value == "true";
     };
     fetchSettings();
+
+    const checkAutoLoginStatus = async () => {
+      try {
+        const tokenResponse = await SecureStoragePlugin.get({ key: "autoLoginToken" });
+        if (tokenResponse.value) {
+          setIsAutoLoginActive(true);
+        } else {
+          setIsAutoLoginActive(false);
+        }
+      } catch (error) {
+        console.error("Error checking auto-login status:", error);
+        setIsAutoLoginActive(false); // Assume inactive on error
+      }
+    };
+    checkAutoLoginStatus();
   }, []);
+
+  const handleDisableAutoLogin = async () => {
+    try {
+      await SecureStoragePlugin.remove({ key: "autoLoginToken" });
+      setIsAutoLoginActive(false);
+      setFeedbackMessage(t("advanced.auto_login.disabled_message")); // Using a plausible translation key path
+    } catch (error) {
+      console.error("Error disabling auto-login:", error);
+      setFeedbackMessage(t("advanced.auto_login.error_message")); // Optional: specific error message
+    }
+  };
 
   return (
     <Layout>
@@ -266,6 +295,29 @@ const Settings = () => {
                 }}
               >
                 {t("advanced.clear_cache.button")}
+              </button>
+            </div>
+            {/* Auto-login settings */}
+            <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-2">
+              <div className="flex flex-col">
+                <span className="text-lg font-semibold">
+                  {t("advanced.auto_login.title")}
+                </span>
+                <span className="text-sm">
+                  {isAutoLoginActive
+                    ? t("advanced.auto_login.currently_active")
+                    : t("advanced.auto_login.currently_inactive")}
+                </span>
+                {feedbackMessage && (
+                  <span className="text-sm text-success">{feedbackMessage}</span>
+                )}
+              </div>
+              <button
+                className="btn btn-warning"
+                onClick={handleDisableAutoLogin}
+                disabled={!isAutoLoginActive}
+              >
+                {t("advanced.auto_login.disable_button")}
               </button>
             </div>
           </div>
