@@ -1,0 +1,37 @@
+{
+  "navigation": {
+    "home": "Головна сторінка",
+    "grades": "Оцінки",
+    "exams": "Контрольні роботи",
+    "timetable": "Розклад",
+    "teacherAbsences": "Заміни вчителів",
+    "attendance": "Відвідуваність",
+    "messages": "Повідомлення",
+    "developer": "Розробник",
+    "account": {
+      "profile": "Профіль",
+      "settings": "Налаштування",
+      "logout": "Вийти"
+    }
+  },
+  "actions": {
+    "close": "Закрити",
+    "cancel": "Скасувати",
+    "edit": "Редагувати",
+    "save": "Зберегти"
+  },
+  "states": {
+    "loading": "Завантаження...",
+    "empty": "Немає даних."
+  },
+  "unknown": {
+    "teacher": "Невідомий вчитель"
+  },
+  "common": {
+    "or": "або",
+    "summary": "Підсумок",
+    "school": {
+      "semester": "Семестр {{semester}}"
+    }
+  }
+}
