@@ -28,16 +28,18 @@ const Timetable = () => {
   } = useTimetable(date);
 
   useEffect(() => {
-    if (!timetableLoading && timetableData) {
-      const today = dayjs().isoWeekday() - 1;
-      if (dayRefs.current[today]) {
-        dayRefs.current[today].scrollIntoView({
+    const isCurrentWeek = dayjs(date).isSame(dayjs(), "isoWeek");
+
+    if (!timetableLoading && timetableData && isCurrentWeek) {
+      const todayIndex = dayjs().isoWeekday() - 1; // Monday is 0
+      if (todayIndex >= 0 && todayIndex < 5 && dayRefs.current[todayIndex]) {
+        dayRefs.current[todayIndex].scrollIntoView({
           behavior: "smooth",
           block: "nearest",
         });
       }
     }
-  }, [timetableLoading, timetableData]);
+  }, [timetableLoading, timetableData, date]);
 
   return (
     <Layout>
