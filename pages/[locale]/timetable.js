@@ -2,7 +2,7 @@ import Layout from "@/components/layout";
 import { useTimetable } from "@/lib/timetable";
 import { upperFirst } from "@/lib/utils";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
@@ -16,6 +16,7 @@ dayjs.extend(isoWeek);
 
 const Timetable = () => {
   const { t } = useTranslation("timetable");
+  const dayRefs = useRef([]);
 
   const [date, setDate] = useState(
     dayjs().startOf("isoWeek").format("YYYY-MM-DD")
@@ -25,6 +26,18 @@ const Timetable = () => {
     loading: timetableLoading,
     error: timetableError,
   } = useTimetable(date);
+
+  useEffect(() => {
+    if (!timetableLoading && timetableData) {
+      const today = dayjs().isoWeekday() - 1;
+      if (dayRefs.current[today]) {
+        dayRefs.current[today].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      }
+    }
+  }, [timetableLoading, timetableData]);
 
   return (
     <Layout>
@@ -57,13 +70,14 @@ const Timetable = () => {
       </div>
       <div className="flex flex-row flex-wrap">
         {!timetableLoading && !timetableError
-          ? Object.keys(timetableData).map((day) => {
+          ? Object.keys(timetableData).map((day, index) => {
               const dayData = timetableData[day];
               if (dayjs(day).isoWeekday() > 5) return;
               return (
                 <div
                   className="flex flex-col basis-full md:basis-1/2 lg:basis-1/3 shrink-0 p-2 gap-3"
                   key={day}
+                  ref={(el) => (dayRefs.current[index] = el)}
                 >
                   <span className="text-xl font-semibold">
                     {t(`weekDays.${dayjs(day).isoWeekday() - 1}`)}
